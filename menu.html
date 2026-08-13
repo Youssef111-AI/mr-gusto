@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Mr Gusto Cafe Menu — Browse our coffee & dessert menu.">
+  <meta name="theme-color" content="#1C120F">
+  <meta property="og:title" content="Mr Gusto Cafe — Menu">
+  <meta property="og:description" content="Browse our premium coffee & dessert menu.">
+  <title>Menu | Mr Gusto Cafe</title>
+  <link rel="icon" href="https://res.cloudinary.com/dwhkjr77b/image/upload/v1750708177/MR_GUSTO-02-modified_ukvcl8.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --espresso: #1C120F;
+      --mocha:    #3D2B1F;
+      --caramel:  #8B5E3C;
+      --honey:    #C4956A;
+      --cream:    #F5E6D0;
+      --vanilla:  #FFF8F0;
+      --gold:     #D4A853;
+      --gold-dim: #B8943F;
+      --white:    #FFFFFF;
+
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-elastic:  cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+      --font-display: 'Playfair Display', serif;
+      --font-body:    'Inter', sans-serif;
+    }
+
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--espresso);
+      color: var(--vanilla);
+      min-height: 100dvh;
+      overflow-x: hidden;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0;
+      background: 
+        radial-gradient(ellipse at 20% 20%, rgba(139, 94, 60, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(212, 168, 83, 0.06) 0%, transparent 50%),
+        var(--espresso);
+    }
+
+    .noise-overlay {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .container {
+      position: relative; z-index: 10;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 24px 16px 100px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      animation: revealDown 0.7s var(--ease-out-expo) forwards;
+      opacity: 0;
+    }
+
+    .header h1 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--vanilla), var(--honey));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--vanilla);
+      text-decoration: none;
+      background: rgba(61, 43, 31, 0.5);
+      border: 1.5px solid rgba(196, 149, 106, 0.2);
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s var(--ease-out-expo);
+    }
+
+    .back-btn:hover {
+      background: rgba(61, 43, 31, 0.7);
+      border-color: rgba(212, 168, 83, 0.5);
+      transform: translateX(-4px);
+    }
+
+    .back-btn i {
+      color: var(--gold);
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+    }
+
+    .back-btn:hover i {
+      transform: translateX(-3px);
+    }
+
+    /* Category Tabs */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scrollbar-width: none;
+      animation: revealDown 0.7s var(--ease-out-expo) 0.1s forwards;
+      opacity: 0;
+    }
+
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab {
+      flex-shrink: 0;
+      padding: 10px 20px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(245, 230, 208, 0.6);
+      background: rgba(61, 43, 31, 0.4);
+      border: 1.5px solid rgba(196, 149, 106, 0.15);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-out-expo);
+      white-space: nowrap;
+    }
+
+    .tab:hover {
+      color: var(--vanilla);
+      border-color: rgba(212, 168, 83, 0.4);
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+      color: var(--espresso);
+      border-color: transparent;
+      box-shadow: 0 4px 15px rgba(212,168,83,0.25);
+    }
+
+    /* Menu Grid */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 480px) {
+      .menu-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    }
+
+    .menu-item {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      background: rgba(61, 43, 31, 0.35);
+      border: 1.5px solid rgba(196, 149, 106, 0.12);
+      transition: all 0.4s var(--ease-out-expo);
+      opacity: 0;
+      transform: translateY(24px) scale(0.96);
+      animation: cardReveal 0.6s var(--ease-out-expo) forwards;
+    }
+
+    .menu-item:nth-child(1) { animation-delay: 0.10s; }
+    .menu-item:nth-child(2) { animation-delay: 0.14s; }
+    .menu-item:nth-child(3) { animation-delay: 0.18s; }
+    .menu-item:nth-child(4) { animation-delay: 0.22s; }
+    .menu-item:nth-child(5) { animation-delay: 0.26s; }
+    .menu-item:nth-child(6) { animation-delay: 0.30s; }
+    .menu-item:nth-child(7) { animation-delay: 0.34s; }
+    .menu-item:nth-child(8) { animation-delay: 0.38s; }
+    .menu-item:nth-child(9) { animation-delay: 0.42s; }
+    .menu-item:nth-child(10) { animation-delay: 0.46s; }
+    .menu-item:nth-child(11) { animation-delay: 0.50s; }
+    .menu-item:nth-child(12) { animation-delay: 0.54s; }
+    .menu-item:nth-child(13) { animation-delay: 0.58s; }
+    .menu-item:nth-child(14) { animation-delay: 0.62s; }
+    .menu-item:nth-child(15) { animation-delay: 0.66s; }
+    .menu-item:nth-child(16) { animation-delay: 0.70s; }
+    .menu-item:nth-child(17) { animation-delay: 0.74s; }
+
+    @keyframes cardReveal {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .menu-item:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: rgba(212, 168, 83, 0.4);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+    }
+
+    .menu-item.hidden {
+      display: none;
+    }
+
+    .menu-item img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s var(--ease-out-expo);
+    }
+
+    .menu-item:hover img {
+      transform: scale(1.08);
+    }
+
+    .menu-item__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(28, 18, 15, 0.95) 0%,
+        rgba(28, 18, 15, 0.4) 40%,
+        transparent 70%
+      );
+      transition: opacity 0.3s ease;
+    }
+
+    .menu-item__content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 16px 18px;
+      transform: translateY(8px);
+      transition: transform 0.4s var(--ease-out-expo);
+    }
+
+    .menu-item:hover .menu-item__content {
+      transform: translateY(0);
+    }
+
+    .menu-item__category {
+      display: inline-block;
+      padding: 4px 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gold);
+      background: rgba(212, 168, 83, 0.15);
+      border-radius: 999px;
+      margin-bottom: 8px;
+      backdrop-filter: blur(4px);
+    }
+
+    .menu-item__name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--vanilla);
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(28, 18, 15, 0.97);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s var(--ease-out-expo);
+      padding: 20px;
+    }
+
+    .lightbox.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lightbox img {
+      max-width: 92vw;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 16px;
+      transform: scale(0.9);
+      transition: transform 0.4s var(--ease-out-expo);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .lightbox.active img {
+      transform: scale(1);
+    }
+
+    .lb__close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,255,255,0.15);
+      color: var(--vanilla);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s var(--ease-out-expo);
+    }
+
+    .lb__close:hover {
+      background: rgba(212, 168, 83, 0.25);
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: rotate(90deg);
+    }
+
+    .lb__nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,255,255,0.15);
+      color: var(--vanilla);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s var(--ease-out-expo);
+    }
+
+    .lb__nav:hover {
+      background: rgba(212, 168, 83, 0.25);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .lb__nav.prev { left: 16px; }
+    .lb__nav.next { right: 16px; }
+
+    .lb__counter {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.85rem;
+      color: rgba(245, 230, 208, 0.5);
+      background: rgba(0,0,0,0.4);
+      padding: 8px 20px;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+    }
+
+    /* Footer */
+    .footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 24px 16px;
+      border-top: 1px solid rgba(196, 149, 106, 0.1);
+      margin-top: 20px;
+    }
+
+    .footer p {
+      font-size: 0.75rem;
+      color: rgba(245, 230, 208, 0.35);
+    }
+
+    @keyframes revealDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    @media (min-width: 480px) {
+      .container { padding: 32px 24px 100px; }
+      .header h1 { font-size: 2.2rem; }
+      .menu-item__name { font-size: 1.2rem; }
+    }
+
+    @supports (padding: max(0px)) {
+      .container { padding-bottom: max(100px, env(safe-area-inset-bottom)); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-layer"></div>
+  <div class="noise-overlay"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Our Menu</h1>
+      <a href="index.html" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Back</span>
+      </a>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-filter="all">All</button>
+      <button class="tab" data-filter="hot">Hot Drinks</button>
+      <button class="tab" data-filter="cold">Cold Drinks</button>
+      <button class="tab" data-filter="desserts">Desserts</button>
+      <button class="tab" data-filter="food">Food</button>
+    </div>
+
+    <!-- Menu Grid -->
+    <div class="menu-grid" id="menuGrid">
+      <div class="menu-item" data-category="hot" data-index="0">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351329/1_x0szy8.webp" alt="Menu Item 1" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Hot Drinks</span>
+          <div class="menu-item__name">Menu Item 1</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="hot" data-index="1">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351328/2_nlgxm3.webp" alt="Menu Item 2" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Hot Drinks</span>
+          <div class="menu-item__name">Menu Item 2</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="cold" data-index="2">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351328/3_kgkrak.webp" alt="Menu Item 3" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Cold Drinks</span>
+          <div class="menu-item__name">Menu Item 3</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="cold" data-index="3">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351329/4_nggazq.webp" alt="Menu Item 4" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Cold Drinks</span>
+          <div class="menu-item__name">Menu Item 4</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="desserts" data-index="4">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351330/5_nx78ge.webp" alt="Menu Item 5" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Desserts</span>
+          <div class="menu-item__name">Menu Item 5</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="desserts" data-index="5">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351329/6_sfslox.webp" alt="Menu Item 6" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Desserts</span>
+          <div class="menu-item__name">Menu Item 6</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="food" data-index="6">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351328/7_svg0zc.webp" alt="Menu Item 7" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Food</span>
+          <div class="menu-item__name">Menu Item 7</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="food" data-index="7">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351328/8_dcjdxy.webp" alt="Menu Item 8" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Food</span>
+          <div class="menu-item__name">Menu Item 8</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="hot" data-index="8">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351328/9_jmlrh1.webp" alt="Menu Item 9" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Hot Drinks</span>
+          <div class="menu-item__name">Menu Item 9</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="cold" data-index="9">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351329/10_tuewcy.webp" alt="Menu Item 10" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Cold Drinks</span>
+          <div class="menu-item__name">Menu Item 10</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="desserts" data-index="10">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351328/11_xaoefk.webp" alt="Menu Item 11" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Desserts</span>
+          <div class="menu-item__name">Menu Item 11</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="food" data-index="11">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351329/12_ozvqe0.webp" alt="Menu Item 12" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Food</span>
+          <div class="menu-item__name">Menu Item 12</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="hot" data-index="12">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351328/13_nac1sf.webp" alt="Menu Item 13" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Hot Drinks</span>
+          <div class="menu-item__name">Menu Item 13</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="cold" data-index="13">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351329/14_yapjko.webp" alt="Menu Item 14" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Cold Drinks</span>
+          <div class="menu-item__name">Menu Item 14</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="desserts" data-index="14">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351329/15_wmamye.webp" alt="Menu Item 15" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Desserts</span>
+          <div class="menu-item__name">Menu Item 15</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="food" data-index="15">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351329/16_l38hp8.webp" alt="Menu Item 16" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Food</span>
+          <div class="menu-item__name">Menu Item 16</div>
+        </div>
+      </div>
+      <div class="menu-item" data-category="desserts" data-index="16">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/f_auto,q_75,w_700/v1780351328/17_swe0f6.webp" alt="Menu Item 17" loading="lazy">
+        <div class="menu-item__overlay"></div>
+        <div class="menu-item__content">
+          <span class="menu-item__category">Desserts</span>
+          <div class="menu-item__name">Menu Item 17</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-label="Menu image" aria-hidden="true">
+    <button class="lb__close" id="lbClose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <button class="lb__nav prev" id="lbPrev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+    <img src="" alt="" id="lbImg">
+    <button class="lb__nav next" id="lbNext" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+    <div class="lb__counter" id="lbCounter">1 / 17</div>
+  </div>
+
+  <footer class="footer">
+    <p>© 2026 Mr Gusto Cafe</p>
+  </footer>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const items = document.querySelectorAll('.menu-item');
+      const lightbox = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lbImg');
+      const lbCounter = document.getElementById('lbCounter');
+      let current = 0;
+      let visibleItems = Array.from(items);
+
+      // Filter functionality
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+
+          const filter = tab.dataset.filter;
+          items.forEach(item => {
+            if (filter === 'all' || item.dataset.category === filter) {
+              item.classList.remove('hidden');
+              item.style.animation = 'none';
+              item.offsetHeight;
+              item.style.animation = '';
+            } else {
+              item.classList.add('hidden');
+            }
+          });
+
+          visibleItems = Array.from(items).filter(i => !i.classList.contains('hidden'));
+        });
+      });
+
+      function open(i) {
+        current = i;
+        update();
+        lightbox.classList.add('active');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function close() {
+        lightbox.classList.remove('active');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      function update() {
+        const img = visibleItems[current].querySelector('img');
+        lbImg.src = img.src;
+        lbImg.alt = img.alt;
+        lbCounter.textContent = (current + 1) + ' / ' + visibleItems.length;
+      }
+
+      function next() { current = (current + 1) % visibleItems.length; update(); }
+      function prev() { current = (current - 1 + visibleItems.length) % visibleItems.length; update(); }
+
+      items.forEach((item) => {
+        item.addEventListener('click', () => {
+          const visibleIndex = visibleItems.indexOf(item);
+          open(visibleIndex);
+        });
+        item.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i); }
+        });
+        item.setAttribute('tabindex', '0');
+        item.setAttribute('role', 'button');
+      });
+
+      document.getElementById('lbClose').addEventListener('click', close);
+      document.getElementById('lbNext').addEventListener('click', next);
+      document.getElementById('lbPrev').addEventListener('click', prev);
+      lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') close();
+        if (e.key === 'ArrowRight') next();
+        if (e.key === 'ArrowLeft') prev();
+      });
+
+      // Touch swipe
+      let startX = 0;
+      lightbox.addEventListener('touchstart', (e) => { 
+        startX = e.changedTouches[0].screenX; 
+      }, { passive: true });
+      lightbox.addEventListener('touchend', (e) => {
+        const diff = startX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
+      }, { passive: true });
+
+    })();
+  </script>
+</body>
+</html>

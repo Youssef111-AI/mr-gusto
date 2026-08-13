@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Mr Gusto Cafe — Premium Coffee & Restaurant. Where every sip feels like home.">
+  <meta name="theme-color" content="#1C120F">
+  <meta property="og:title" content="Mr Gusto Cafe">
+  <meta property="og:description" content="Premium Coffee & Restaurant. Where every sip feels like home.">
+  <meta property="og:image" content="https://res.cloudinary.com/dwhkjr77b/image/upload/v1750708177/MR_GUSTO-02-modified_ukvcl8.png">
+  <title>Mr Gusto Cafe</title>
+  <link rel="icon" href="https://res.cloudinary.com/dwhkjr77b/image/upload/v1750708177/MR_GUSTO-02-modified_ukvcl8.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --espresso: #1C120F;
+      --mocha:    #3D2B1F;
+      --caramel:  #8B5E3C;
+      --honey:    #C4956A;
+      --cream:    #F5E6D0;
+      --vanilla:  #FFF8F0;
+      --gold:     #D4A853;
+      --gold-dim: #B8943F;
+      --gold-glow: rgba(212,168,83,0.3);
+      --white:    #FFFFFF;
+
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-elastic:  cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+      --font-display: 'Playfair Display', serif;
+      --font-body:    'Inter', sans-serif;
+    }
+
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--espresso);
+      color: var(--vanilla);
+      min-height: 100dvh;
+      overflow-x: hidden;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* === Animated Background === */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0;
+      background: 
+        radial-gradient(ellipse at 20% 20%, rgba(139, 94, 60, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(212, 168, 83, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(61, 43, 31, 0.4) 0%, transparent 70%),
+        var(--espresso);
+      animation: bgPulse 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgPulse {
+      0% { filter: brightness(1); }
+      100% { filter: brightness(1.05); }
+    }
+
+    /* Floating particles */
+    .particles {
+      position: fixed; inset: 0; z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      width: 4px; height: 4px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0;
+      animation: floatParticle linear infinite;
+    }
+    @keyframes floatParticle {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* Noise */
+    .noise-overlay {
+      position: fixed; inset: 0; z-index: 2; pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* === Main Container === */
+    .container {
+      position: relative; z-index: 10;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+
+    /* === Logo Section === */
+    .logo-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      animation: logoReveal 1.2s var(--ease-out-expo) forwards;
+      opacity: 0;
+    }
+
+    .logo-wrapper {
+      position: relative;
+      width: 130px; height: 130px;
+    }
+
+    .logo-wrapper::before {
+      content: '';
+      position: absolute; inset: -4px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--gold), var(--honey), var(--cream), var(--honey), var(--gold));
+      animation: spinRing 6s linear infinite;
+      opacity: 0.8;
+    }
+
+    .logo-wrapper::after {
+      content: '';
+      position: absolute; inset: -4px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--gold), var(--honey), var(--cream), var(--honey), var(--gold));
+      animation: spinRing 6s linear infinite reverse;
+      filter: blur(12px);
+      opacity: 0.4;
+    }
+
+    .logo-img {
+      position: relative; z-index: 2;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--espresso);
+      background: var(--espresso);
+      animation: logoFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes spinRing { to { transform: rotate(360deg); } }
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes logoReveal {
+      from { opacity: 0; transform: scale(0.6) translateY(30px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* === Typography === */
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--vanilla);
+      text-align: center;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+      animation: textReveal 1s var(--ease-out-expo) 0.2s forwards;
+      opacity: 0;
+    }
+
+    .brand-subtitle {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--honey);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      animation: textReveal 1s var(--ease-out-expo) 0.35s forwards;
+      opacity: 0;
+    }
+
+    .tagline {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1rem;
+      color: rgba(245, 230, 208, 0.7);
+      text-align: center;
+      max-width: 280px;
+      animation: textReveal 1s var(--ease-out-expo) 0.5s forwards;
+      opacity: 0;
+    }
+
+    @keyframes textReveal {
+      from { opacity: 0; transform: translateY(20px); filter: blur(4px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    /* === Divider === */
+    .divider {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      border-radius: 2px;
+      animation: dividerGrow 0.8s var(--ease-out-expo) 0.4s forwards;
+      transform: scaleX(0);
+    }
+    @keyframes dividerGrow { to { transform: scaleX(1); } }
+
+    /* === Buttons Stack === */
+    .links-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .link-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 18px 24px;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 999px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.4s var(--ease-out-expo);
+      border: none;
+      outline: none;
+      animation: btnSlideUp 0.7s var(--ease-out-expo) forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .link-btn:nth-child(1) { animation-delay: 0.6s; }
+    .link-btn:nth-child(2) { animation-delay: 0.7s; }
+    .link-btn:nth-child(3) { animation-delay: 0.8s; }
+    .link-btn:nth-child(4) { animation-delay: 0.9s; }
+    .link-btn:nth-child(5) { animation-delay: 1.0s; }
+    .link-btn:nth-child(6) { animation-delay: 1.1s; }
+    .link-btn:nth-child(7) { animation-delay: 1.2s; }
+
+    @keyframes btnSlideUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* === Unified Premium Button Style === */
+    .link-btn--main {
+      background: linear-gradient(135deg, rgba(61,43,31,0.7), rgba(61,43,31,0.5));
+      color: var(--vanilla);
+      border: 1.5px solid rgba(196, 149, 106, 0.25);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .link-btn--main::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(212,168,83,0.1), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.7s ease;
+    }
+
+    .link-btn--main:hover::before {
+      transform: translateX(100%);
+    }
+
+    .link-btn--main:hover {
+      border-color: rgba(212, 168, 83, 0.6);
+      background: linear-gradient(135deg, rgba(61,43,31,0.85), rgba(61,43,31,0.65));
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 30px rgba(212,168,83,0.15), 0 0 0 1px rgba(212,168,83,0.2);
+    }
+
+    .link-btn--main:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    /* Gold accent for primary actions */
+    .link-btn--accent {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+      color: var(--espresso);
+      border: none;
+      box-shadow: 0 4px 20px rgba(212,168,83,0.3);
+    }
+
+    .link-btn--accent::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.7s ease;
+    }
+
+    .link-btn--accent:hover::before {
+      transform: translateX(100%);
+    }
+
+    .link-btn--accent:hover {
+      box-shadow: 0 8px 30px rgba(212,168,83,0.4);
+      transform: translateY(-3px) scale(1.02);
+    }
+
+    /* WhatsApp green accent */
+    .link-btn--wa {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.22);
+    }
+
+    .link-btn--wa::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.7s ease;
+    }
+
+    .link-btn--wa:hover::before {
+      transform: translateX(100%);
+    }
+
+    .link-btn--wa:hover {
+      box-shadow: 0 8px 30px rgba(37,211,102,0.32);
+      transform: translateY(-3px) scale(1.02);
+    }
+
+    .link-btn__icon {
+      font-size: 1.1rem;
+      transition: transform 0.3s var(--ease-elastic);
+    }
+
+    .link-btn:hover .link-btn__icon {
+      transform: scale(1.2) rotate(-5deg);
+    }
+
+    /* Ripple effect */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      transform: scale(0);
+      animation: rippleEffect 0.6s linear;
+      pointer-events: none;
+    }
+    @keyframes rippleEffect {
+      to { transform: scale(4); opacity: 0; }
+    }
+
+    /* === Info Row === */
+    .info-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      animation: textReveal 1s var(--ease-out-expo) 1.3s forwards;
+      opacity: 0;
+    }
+
+    .info-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: rgba(245, 230, 208, 0.65);
+      transition: color 0.3s ease;
+    }
+    .info-chip:hover { color: var(--gold); }
+    .info-chip i { font-size: 0.85rem; color: var(--gold); }
+
+    /* === Social Icons Row === */
+    .social-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      animation: textReveal 1s var(--ease-out-expo) 1.4s forwards;
+      opacity: 0;
+    }
+
+    .social-icon {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(61, 43, 31, 0.5);
+      border: 1.5px solid rgba(196, 149, 106, 0.2);
+      color: var(--vanilla);
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: all 0.3s var(--ease-out-expo);
+      backdrop-filter: blur(8px);
+    }
+
+    .social-icon:hover {
+      background: var(--gold);
+      color: var(--espresso);
+      border-color: var(--gold);
+      transform: translateY(-4px) scale(1.1);
+      box-shadow: 0 8px 20px rgba(212,168,83,0.3);
+    }
+
+    /* === Footer === */
+    .footer {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
+      text-align: center;
+      padding: 16px;
+      background: linear-gradient(to top, var(--espresso), transparent);
+      animation: textReveal 1s var(--ease-out-expo) 1.5s forwards;
+      opacity: 0;
+    }
+
+    .footer p {
+      font-size: 0.7rem;
+      color: rgba(245, 230, 208, 0.35);
+      letter-spacing: 1px;
+    }
+
+    /* === Reduced Motion === */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* === Responsive === */
+    @media (min-width: 480px) {
+      .container { padding: 80px 32px 120px; gap: 32px; }
+      .logo-wrapper { width: 150px; height: 150px; }
+      .brand-title { font-size: 2.6rem; }
+      .brand-subtitle { font-size: 1rem; letter-spacing: 4px; }
+      .tagline { font-size: 1.1rem; max-width: 320px; }
+      .link-btn { padding: 20px 28px; font-size: 1rem; }
+      .links-stack { max-width: 420px; gap: 16px; }
+    }
+
+    @media (min-width: 768px) {
+      .container { max-width: 520px; }
+      .brand-title { font-size: 3rem; }
+    }
+
+    @supports (padding: max(0px)) {
+      .container { padding-bottom: max(100px, env(safe-area-inset-bottom)); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-layer"></div>
+  <div class="particles" id="particles"></div>
+  <div class="noise-overlay"></div>
+
+  <main class="container">
+
+    <div class="logo-section">
+      <div class="logo-wrapper">
+        <img src="https://res.cloudinary.com/dwhkjr77b/image/upload/v1750708177/MR_GUSTO-02-modified_ukvcl8.png" alt="Mr Gusto Cafe Logo" class="logo-img" loading="eager">
+      </div>
+    </div>
+
+    <h1 class="brand-title">Welcome to Mr Gusto Cafe</h1>
+    <p class="brand-subtitle">Coffee & Restaurant</p>
+
+    <div class="divider"></div>
+
+    <p class="tagline">"Where every sip feels like home."</p>
+
+    <div class="links-stack">
+      <a href="menu.html" class="link-btn link-btn--accent">
+        <i class="fa-solid fa-utensils link-btn__icon"></i>
+        <span>View Menu</span>
+      </a>
+
+      <a href="https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID" target="_blank" rel="noopener" class="link-btn link-btn--main">
+        <i class="fa-brands fa-google link-btn__icon"></i>
+        <span>Rate us on Google</span>
+      </a>
+
+      <a href="https://wa.me/201000000000" target="_blank" rel="noopener" class="link-btn link-btn--wa">
+        <i class="fa-brands fa-whatsapp link-btn__icon"></i>
+        <span>Order on WhatsApp</span>
+      </a>
+
+      <a href="https://maps.google.com/?q=Mr+Gusto+Cafe" target="_blank" rel="noopener" class="link-btn link-btn--main">
+        <i class="fa-solid fa-location-dot link-btn__icon"></i>
+        <span>Find Our Location</span>
+      </a>
+
+      <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="link-btn link-btn--main">
+        <i class="fa-brands fa-instagram link-btn__icon"></i>
+        <span>Instagram</span>
+      </a>
+
+      <a href="https://www.facebook.com/" target="_blank" rel="noopener" class="link-btn link-btn--main">
+        <i class="fa-brands fa-facebook-f link-btn__icon"></i>
+        <span>Facebook</span>
+      </a>
+
+      <a href="https://www.tiktok.com/" target="_blank" rel="noopener" class="link-btn link-btn--main">
+        <i class="fa-brands fa-tiktok link-btn__icon"></i>
+        <span>TikTok</span>
+      </a>
+    </div>
+
+    <div class="info-row">
+      <div class="info-chip">
+        <i class="fa-solid fa-clock"></i>
+        <span>8 AM — 12 AM</span>
+      </div>
+      <div class="info-chip">
+        <i class="fa-solid fa-phone"></i>
+        <span>0100 000 0000</span>
+      </div>
+    </div>
+
+    <div class="social-row">
+      <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">
+        <i class="fa-brands fa-instagram"></i>
+      </a>
+      <a href="https://www.facebook.com/" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
+        <i class="fa-brands fa-facebook-f"></i>
+      </a>
+      <a href="https://www.tiktok.com/" target="_blank" rel="noopener" class="social-icon" aria-label="TikTok">
+        <i class="fa-brands fa-tiktok"></i>
+      </a>
+      <a href="https://wa.me/201000000000" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+      </a>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Mr Gusto Cafe — All Rights Reserved</p>
+  </footer>
+
+  <script>
+    (function() {
+      'use strict';
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Particles
+      if (!reduced) {
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+          const p = document.createElement('div');
+          p.className = 'particle';
+          p.style.left = Math.random() * 100 + '%';
+          p.style.animationDuration = (8 + Math.random() * 12) + 's';
+          p.style.animationDelay = Math.random() * 10 + 's';
+          p.style.width = p.style.height = (2 + Math.random() * 4) + 'px';
+          particlesContainer.appendChild(p);
+        }
+      }
+
+      // Ripple
+      document.querySelectorAll('.link-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          const rect = this.getBoundingClientRect();
+          const ripple = document.createElement('span');
+          ripple.className = 'ripple';
+          const size = Math.max(rect.width, rect.height);
+          ripple.style.width = ripple.style.height = size + 'px';
+          ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+          ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+          this.appendChild(ripple);
+          setTimeout(() => ripple.remove(), 600);
+        });
+      });
+
+      // Magnetic social icons
+      const isTouch = window.matchMedia('(pointer: coarse)').matches;
+      if (!isTouch && !reduced) {
+        document.querySelectorAll('.social-icon').forEach(icon => {
+          icon.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            this.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px) scale(1.1)`;
+          });
+          icon.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+          });
+        });
+      }
+
+      // Touch feedback
+      if (isTouch) {
+        document.querySelectorAll('.link-btn').forEach(btn => {
+          btn.addEventListener('touchstart', function() { this.style.transform = 'scale(0.97)'; }, { passive: true });
+          btn.addEventListener('touchend', function() { this.style.transform = ''; }, { passive: true });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
