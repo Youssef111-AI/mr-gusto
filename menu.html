@@ -29,6 +29,12 @@
 
       --font-display: 'Playfair Display', serif;
       --font-body:    'Inter', sans-serif;
+
+      /* ===== TOAST NOTIFICATION TIMING CONTROLS ===== */
+      /* Change these values to control toast behavior (in seconds) */
+      --toast-first-delay: 3s;        /* Wait before first toast appears */
+      --toast-interval: 5s;           /* Time between each toast appearance */
+      --toast-display-duration: 10s;   /* How long toast stays visible */
     }
 
     *, *::before, *::after {
@@ -236,9 +242,9 @@
       inset: 0;
       background: linear-gradient(
         to top,
-        rgba(28, 18, 15, 0.95) 0%,
-        rgba(28, 18, 15, 0.4) 40%,
-        transparent 70%
+        rgba(28, 18, 15, 0.85) 0%,
+        rgba(28, 18, 15, 0.2) 30%,
+        transparent 55%
       );
       transition: opacity 0.3s ease;
     }
@@ -249,7 +255,7 @@
       left: 0;
       right: 0;
       padding: 20px 16px 18px;
-      transform: translateY(8px);
+      transform: translateY(4px);
       transition: transform 0.4s var(--ease-out-expo);
     }
 
@@ -376,6 +382,105 @@
       padding: 8px 20px;
       border-radius: 999px;
       backdrop-filter: blur(8px);
+    }
+
+    /* === Instagram Notification === */
+    .insta-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      z-index: 3000;
+      background: linear-gradient(135deg, rgba(225, 48, 108, 0.15), rgba(131, 58, 180, 0.15));
+      border: 1px solid rgba(225, 48, 108, 0.3);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      max-width: 90vw;
+      width: 380px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      transition: transform 0.6s var(--ease-out-expo), opacity 0.6s ease;
+      opacity: 0;
+    }
+
+    .insta-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .insta-toast__icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .insta-toast__icon i {
+      color: #fff;
+      font-size: 1.3rem;
+    }
+
+    .insta-toast__content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .insta-toast__content p {
+      font-size: 0.85rem;
+      color: var(--vanilla);
+      line-height: 1.4;
+      margin-bottom: 2px;
+    }
+
+    .insta-toast__content span {
+      font-size: 0.75rem;
+      color: rgba(245, 230, 208, 0.55);
+    }
+
+    .insta-toast__btn {
+      padding: 8px 16px;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366);
+      border: none;
+      border-radius: 999px;
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.3s var(--ease-out-expo);
+      flex-shrink: 0;
+    }
+
+    .insta-toast__btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 16px rgba(220, 39, 67, 0.3);
+    }
+
+    .insta-toast__close {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      background: none;
+      border: none;
+      color: rgba(245, 230, 208, 0.4);
+      font-size: 0.75rem;
+      cursor: pointer;
+      padding: 4px;
+      transition: color 0.2s ease;
+    }
+
+    .insta-toast__close:hover {
+      color: var(--vanilla);
     }
 
     /* Footer */
@@ -587,6 +692,23 @@
     <div class="lb__counter" id="lbCounter">1 / 17</div>
   </div>
 
+  <!-- Instagram Toast Notification -->
+  <div class="insta-toast" id="instaToast">
+    <button class="insta-toast__close" id="instaToastClose" aria-label="Close notification">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="insta-toast__icon">
+      <i class="fa-brands fa-instagram"></i>
+    </div>
+    <div class="insta-toast__content">
+      <p>Follow us on Instagram for daily specials!</p>
+      <span>@mrgustocafe</span>
+    </div>
+    <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="insta-toast__btn" id="instaToastBtn">
+      Follow
+    </a>
+  </div>
+
   <footer class="footer">
     <p>© 2026 Mr Gusto Cafe</p>
   </footer>
@@ -682,6 +804,46 @@
         const diff = startX - e.changedTouches[0].screenX;
         if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
       }, { passive: true });
+
+      // Instagram Toast Notification — Timing controlled by CSS variables
+      const instaToast = document.getElementById('instaToast');
+      const instaToastClose = document.getElementById('instaToastClose');
+      const instaToastBtn = document.getElementById('instaToastBtn');
+      let toastInterval;
+      let toastTimeout;
+
+      // Read timing values from CSS variables
+      const rootStyles = getComputedStyle(document.documentElement);
+      const firstDelay = parseFloat(rootStyles.getPropertyValue('--toast-first-delay')) * 1000 || 2000;
+      const interval = parseFloat(rootStyles.getPropertyValue('--toast-interval')) * 1000 || 5000;
+      const displayDuration = parseFloat(rootStyles.getPropertyValue('--toast-display-duration')) * 1000 || 4000;
+
+      function showToast() {
+        instaToast.classList.add('show');
+        // Auto hide after display duration
+        toastTimeout = setTimeout(() => {
+          instaToast.classList.remove('show');
+        }, displayDuration);
+      }
+
+      function hideToast() {
+        instaToast.classList.remove('show');
+        clearTimeout(toastTimeout);
+      }
+
+      // Start the cycle: show every interval
+      function startToastCycle() {
+        showToast();
+        toastInterval = setInterval(() => {
+          showToast();
+        }, interval);
+      }
+
+      // Initial delay then start cycle
+      setTimeout(startToastCycle, firstDelay);
+
+      instaToastClose.addEventListener('click', hideToast);
+      instaToastBtn.addEventListener('click', hideToast);
 
     })();
   </script>
