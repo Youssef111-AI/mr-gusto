@@ -89,16 +89,6 @@
     if (e.key === 'ArrowLeft') prev();
   });
 
-  // Touch swipe
-  let startX = 0;
-  lightbox.addEventListener('touchstart', (e) => {
-    startX = e.changedTouches[0].screenX;
-  }, { passive: true });
-  lightbox.addEventListener('touchend', (e) => {
-    const diff = startX - e.changedTouches[0].screenX;
-    if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
-  }, { passive: true });
-
   // ===== PINCH-TO-ZOOM & DOUBLE-TAP ZOOM =====
   let currentScale = 1;
   let initialDistance = 0;
