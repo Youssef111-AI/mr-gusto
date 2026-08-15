@@ -41,11 +41,21 @@ body {
 }
 
 .bg-layer {
-  position: fixed; inset: 0; z-index: 0;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 0;
   background:
     radial-gradient(ellipse at 20% 20%, rgba(139, 94, 60, 0.12) 0%, transparent 50%),
     radial-gradient(ellipse at 80% 80%, rgba(212, 168, 83, 0.06) 0%, transparent 50%),
     var(--espresso);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .noise-overlay {
@@ -313,10 +323,51 @@ body {
   transform: scale(0.9);
   transition: transform 0.4s var(--ease-out-expo);
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .lightbox.active img {
   transform: scale(1);
+}
+
+.lightbox img.zoomed {
+  cursor: grab;
+  transition: transform 0.3s ease;
+}
+
+.lightbox img.zoomed:active {
+  cursor: grabbing;
+}
+
+/* Zoom hint */
+.zoom-hint {
+  position: absolute;
+  bottom: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: rgba(245, 230, 208, 0.4);
+  background: rgba(0,0,0,0.35);
+  padding: 6px 16px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.lightbox.active .zoom-hint {
+  opacity: 1;
+  animation: hintFade 3s ease 1s forwards;
+}
+
+@keyframes hintFade {
+  0% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 .lb__close {

@@ -99,6 +99,125 @@
     if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
   }, { passive: true });
 
+  // ===== PINCH-TO-ZOOM & DOUBLE-TAP ZOOM =====
+  let currentScale = 1;
+  let initialDistance = 0;
+  let initialScale = 1;
+  let isPinching = false;
+  let lastTapTime = 0;
+  let panX = 0, panY = 0;
+  let startPanX = 0, startPanY = 0;
+  let initialPanX = 0, initialPanY = 0;
+
+  function resetZoom() {
+    currentScale = 1;
+    panX = 0;
+    panY = 0;
+    lbImg.style.transform = 'scale(1)';
+    lbImg.classList.remove('zoomed');
+  }
+
+  function applyZoom() {
+    lbImg.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + currentScale + ')';
+    if (currentScale > 1) {
+      lbImg.classList.add('zoomed');
+    } else {
+      lbImg.classList.remove('zoomed');
+    }
+  }
+
+  function getDistance(touches) {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function getCenter(touches) {
+    return {
+      x: (touches[0].clientX + touches[1].clientX) / 2,
+      y: (touches[0].clientY + touches[1].clientY) / 2
+    };
+  }
+
+  // Double-tap to zoom
+  lbImg.addEventListener('click', (e) => {
+    const now = Date.now();
+    if (now - lastTapTime < 300) {
+      // Double tap
+      e.preventDefault();
+      if (currentScale > 1) {
+        resetZoom();
+      } else {
+        currentScale = 2.5;
+        // Center zoom on tap point
+        const rect = lbImg.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left - rect.width / 2;
+        const offsetY = e.clientY - rect.top - rect.height / 2;
+        panX = -offsetX * (currentScale - 1);
+        panY = -offsetY * (currentScale - 1);
+        applyZoom();
+      }
+    }
+    lastTapTime = now;
+  });
+
+  // Pinch zoom
+  lbImg.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      isPinching = true;
+      initialDistance = getDistance(e.touches);
+      initialScale = currentScale;
+      initialPanX = panX;
+      initialPanY = panY;
+      e.preventDefault();
+    } else if (e.touches.length === 1 && currentScale > 1) {
+      startPanX = e.touches[0].clientX;
+      startPanY = e.touches[0].clientY;
+      initialPanX = panX;
+      initialPanY = panY;
+    }
+  }, { passive: false });
+
+  lbImg.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2 && isPinching) {
+      e.preventDefault();
+      const distance = getDistance(e.touches);
+      const scaleChange = distance / initialDistance;
+      currentScale = Math.min(Math.max(initialScale * scaleChange, 1), 4);
+      applyZoom();
+    } else if (e.touches.length === 1 && currentScale > 1) {
+      e.preventDefault();
+      const dx = e.touches[0].clientX - startPanX;
+      const dy = e.touches[0].clientY - startPanY;
+      panX = initialPanX + dx;
+      panY = initialPanY + dy;
+      applyZoom();
+    }
+  }, { passive: false });
+
+  lbImg.addEventListener('touchend', (e) => {
+    if (e.touches.length < 2) {
+      isPinching = false;
+    }
+    // Snap back if zoomed out too much
+    if (currentScale < 1.1) {
+      resetZoom();
+    }
+  });
+
+  // Reset zoom on image change or close
+  const originalOpen = open;
+  open = function(i) {
+    resetZoom();
+    originalOpen(i);
+  };
+
+  const originalClose = close;
+  close = function() {
+    resetZoom();
+    originalClose();
+  };
+
   // Instagram Toast Notification
   const instaToast = document.getElementById('instaToast');
   const instaToastClose = document.getElementById('instaToastClose');

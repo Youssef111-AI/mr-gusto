@@ -73,11 +73,15 @@ body {
 
 .intro-bg {
   position: absolute;
-  inset: 0;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
   background: url('https://res.cloudinary.com/dwhkjr77b/image/upload/v1786698673/ChatGPT_Image_Aug_14_2026_11_07_54_AM_ln0pnl.png') center/cover no-repeat;
   filter: blur(20px) brightness(0.3);
-  transform: scale(1.1);
+  transform: scale(1.1) translateZ(0);
   animation: introBgPulse 3s ease-in-out infinite alternate;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 @keyframes introBgPulse {
@@ -224,9 +228,19 @@ body {
 
 /* === Animated Background === */
 .bg-layer {
-  position: fixed; inset: 0; z-index: 0;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 0;
   background: url('https://res.cloudinary.com/dwhkjr77b/image/upload/v1786698673/ChatGPT_Image_Aug_14_2026_11_07_54_AM_ln0pnl.png') center/cover no-repeat;
   animation: bgPulse 8s ease-in-out infinite alternate;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .bg-layer::before {
