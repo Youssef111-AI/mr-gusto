@@ -535,8 +535,9 @@ body {
   z-index: 1;
 }
 
-/* === Google Rate Button === */
+/* === Google Rate Button (Glass) === */
 .google-btn {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -550,59 +551,89 @@ body {
   text-decoration: none;
   border-radius: 999px;
   cursor: pointer;
+  overflow: hidden;
   transition: all 0.4s var(--ease-out-expo);
-  animation: btnSlideUp 0.7s var(--ease-out-expo) 0.7s forwards;
-  opacity: 0;
-  transform: translateY(30px);
 
-  background: linear-gradient(
-    120deg,
-    #8B5E3C,
-    #C4956A,
-    #D4A853,
-    #F5E6D0,
-    #D4A853,
-    #C4956A,
-    #8B5E3C
-  );
-
-  background-size: 300% 300%;
-
-  color: #fff;
-
-  border: 2px solid rgba(255,255,255,0.25);
-
+  /* Same glass effect as the square buttons */
+  background: rgba(61, 43, 31, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(196, 149, 106, 0.25);
   box-shadow:
-    0 4px 20px rgba(212,168,83,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.25);
+    0 4px 24px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
-  text-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  color: var(--vanilla);
 
   animation:
     btnSlideUp 0.7s var(--ease-out-expo) 0.7s forwards,
-    googleGold 5s ease-in-out infinite;
+    googleGlow 3s ease-in-out 1.4s infinite;
+  opacity: 0;
+  transform: translateY(30px);
 }
 
-@keyframes googleGold {
-  0% {
-    background-position: 0% 50%;
-  }
+/* Glass top highlight — same as square buttons */
+.google-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.02) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border-radius: 999px;
+  pointer-events: none;
+}
 
+/* Continuous shimmer sweep */
+.google-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.22),
+    rgba(212, 168, 83, 0.18),
+    transparent
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+  animation: googleShimmer 3.2s ease-in-out 1.4s infinite;
+}
+
+@keyframes googleShimmer {
+  0%   { left: -100%; }
+  55%  { left: 140%; }
+  100% { left: 140%; }
+}
+
+/* Soft gold glow pulse around the button */
+@keyframes googleGlow {
+  0%, 100% {
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.2),
+      0 0 0 0 rgba(212, 168, 83, 0.0),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
   50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.2),
+      0 0 24px 4px rgba(212, 168, 83, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 }
 
 .google-btn:hover {
   transform: translateY(-3px) scale(1.02);
+  border-color: rgba(212, 168, 83, 0.5);
   box-shadow:
-    0 8px 30px rgba(66,133,244,0.45),
-    0 0 0 2px rgba(255,255,255,0.15),
-    inset 0 1px 0 rgba(255,255,255,0.3);
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(212, 168, 83, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .google-btn:active {
@@ -611,6 +642,17 @@ body {
 
 .google-btn i {
   font-size: 1.1rem;
+  color: var(--gold);
+  transition: transform 0.3s var(--ease-elastic);
+  z-index: 1;
+}
+
+.google-btn:hover i {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+.google-btn span {
+  z-index: 1;
 }
 
 /* === Social Media Icons === */
