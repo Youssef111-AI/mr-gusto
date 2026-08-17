@@ -19,7 +19,7 @@
   --ease-elastic:  cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
   --font-display: 'Playfair Display', serif;
-  --font-brush: 'Brush Script MT', 'Brush Script', cursive;
+  --font-brush: 'Damion', cursive;
   --font-anton: 'Anton', sans-serif;
   --font-body:  'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
@@ -382,10 +382,9 @@ body {
   font-family: var(--font-brush);
   font-size: 3.2rem;
   font-weight: 400;
-  background: linear-gradient(135deg, var(--vanilla), var(--honey));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #fff;
+  background: none;
+  -webkit-text-fill-color: #fff;
   line-height: 1.1;
   margin-bottom: 2px;
 }
@@ -395,7 +394,7 @@ body {
   font-family: var(--font-anton);
   font-size: 1.6rem;
   font-weight: 400;
-  color: var(--honey);
+  color: #fff;
   text-transform: uppercase;
   letter-spacing: 1px;
   line-height: 1.2;
@@ -405,7 +404,7 @@ body {
   font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 500;
-  color: var(--gold);
+  color: #fff;
   letter-spacing: 3px;
   text-transform: uppercase;
   animation: textReveal 1s var(--ease-out-expo) 0.35s forwards;
@@ -556,25 +555,46 @@ body {
   opacity: 0;
   transform: translateY(30px);
 
-  background: linear-gradient(135deg, #4285F4, #34A853, #FBBC05, #EA4335);
-  background-size: 400% 400%;
+  background: linear-gradient(
+    120deg,
+    #8B5E3C,
+    #C4956A,
+    #D4A853,
+    #F5E6D0,
+    #D4A853,
+    #C4956A,
+    #8B5E3C
+  );
+
+  background-size: 300% 300%;
+
   color: #fff;
+
   border: 2px solid rgba(255,255,255,0.25);
+
   box-shadow:
-    0 4px 20px rgba(66,133,244,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.2);
+    0 4px 20px rgba(212,168,83,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.25);
+
   text-shadow: 0 1px 3px rgba(0,0,0,0.25);
-  animation-name: btnSlideUp, googleGradient;
-  animation-duration: 0.7s, 4s;
-  animation-timing-function: var(--ease-out-expo), ease;
-  animation-delay: 0.7s, 0s;
-  animation-iteration-count: 1, infinite;
+
+  animation:
+    btnSlideUp 0.7s var(--ease-out-expo) 0.7s forwards,
+    googleGold 5s ease-in-out infinite;
 }
 
-@keyframes googleGradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+@keyframes googleGold {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .google-btn:hover {
@@ -648,11 +668,11 @@ body {
   align-items: center;
   gap: 8px;
   font-size: 0.82rem;
-  color: rgba(245, 230, 208, 0.65);
+  color: #fff;
   transition: color 0.3s ease;
 }
 .info-chip:hover { color: var(--gold); }
-.info-chip i { font-size: 0.85rem; color: var(--gold); }
+.info-chip i { font-size: 0.85rem; color: #fff; }
 
 /* === Social Modal === */
 .social-modal {
